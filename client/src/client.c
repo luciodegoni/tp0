@@ -25,8 +25,10 @@ int main(void)
 	/* ---------------- ARCHIVOS DE CONFIGURACION ---------------- */
 
 	config = iniciar_config();
-	char* claveSecreta = config_get_string_value(config, "CLAVE");
-	log_info(logger, "la clave secreta es: %s", claveSecreta);
+	ip = config_get_string_value(config, "IP");
+	puerto = config_get_string_value(config, "PUERTO");
+	valor = config_get_string_value(config, "CLAVE");
+	log_info(logger, "la clave secreta es: %s", valor);
 
 	// Usando el config creado previamente, leemos los valores del config y los 
 	// dejamos en las variables 'ip', 'puerto' y 'valor'
@@ -46,6 +48,8 @@ int main(void)
 	conexion = crear_conexion(ip, puerto);
 
 	// Enviamos al servidor el valor de CLAVE como mensaje
+
+	enviar_mensaje(valor, conexion);
 
 	// Armamos y enviamos el paquete
 	paquete(conexion);
@@ -108,7 +112,7 @@ void paquete(int conexion)
 		leido = readline("> ");
 	}
 	free(leido);
-	enviar_paquete(paquete, socket_cliente);
+	enviar_paquete(paquete, conexion);
 	eliminar_paquete(paquete);
 
 	// ¡No te olvides de liberar las líneas y el paquete antes de regresar!
